@@ -18,7 +18,19 @@
     <li routerLinkActive="active">
       <a routerLink="flight-booking/flight-search">
         <i class="ti-arrow-top-right"></i>
-        <p>Flights</p>
+        <p>
+          Flights
+          <span class="badge badge-pill badge-info" *ngIf="count$ | async as count">
+            {{ count }}
+          </span>
+        </p>
+      </a>
+    </li>
+
+    <li routerLinkActive="active">
+      <a routerLink="mf-passenger">
+        <i class="ti-user"></i>
+        <p>MF Passenger</p>
       </a>
     </li>
 
