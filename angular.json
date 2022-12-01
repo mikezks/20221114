@@ -1,6 +1,10 @@
 {
   "version": 2,
   "projects": {
+    "boarding": "apps/boarding",
+    "boarding-domain": "libs/boarding/domain",
+    "boarding-e2e": "apps/boarding-e2e",
+    "boarding-feature-check-ticket": "libs/boarding/feature-check-ticket",
     "dashboard": "apps/dashboard",
     "dashboard-e2e": "apps/dashboard-e2e",
     "dashboard-lib": "libs/dashboard-lib",

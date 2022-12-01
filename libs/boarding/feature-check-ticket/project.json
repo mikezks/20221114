@@ -1,0 +1,25 @@
+{
+  "projectType": "library",
+  "sourceRoot": "libs/boarding/feature-check-ticket/src",
+  "prefix": "boarding",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/boarding/feature-check-ticket"],
+      "options": {
+        "jestConfig": "libs/boarding/feature-check-ticket/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/boarding/feature-check-ticket/**/*.ts",
+          "libs/boarding/feature-check-ticket/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["domain:boarding", "type:feature"]
+}
