@@ -1,3 +1,4 @@
+import { PassengerModule } from './passenger/passenger.module';
 import { FlightCancellingModule } from './flight-booking/flight-cancelling/flight-cancelling.module';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,6 +27,7 @@ import { environment } from '../environments/environment';
     BrowserModule,
     HttpClientModule,
     FlightBookingModule,
+    PassengerModule,
 
     BrowserAnimationsModule,
     FlightCancellingModule,
