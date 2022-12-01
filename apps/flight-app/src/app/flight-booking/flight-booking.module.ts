@@ -14,6 +14,7 @@ import { StoreModule } from '@ngrx/store';
 import * as fromFlightBooking from './+state/flight-booking.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { FlightBookingEffects } from './+state/flight-booking.effects';
+import { FlightFilterComponent } from './flight-filter/flight-filter.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { FlightBookingEffects } from './+state/flight-booking.effects';
     RouterModule.forChild(FLIGHT_BOOKING_ROUTES),
     StoreModule.forFeature(fromFlightBooking.flightBookingFeatureKey, fromFlightBooking.reducer),
     EffectsModule.forFeature([FlightBookingEffects]),
+    FlightFilterComponent
   ],
   declarations: [
     FlightSearchComponent,
@@ -31,7 +33,7 @@ import { FlightBookingEffects } from './+state/flight-booking.effects';
     PassengerSearchComponent,
     FlightEditComponent,
     FlightBookingComponent,
-    FlightTypeaheadComponent,
+    FlightTypeaheadComponent
   ],
   providers: [],
   exports: [FlightSearchComponent],
