@@ -1,3 +1,4 @@
+import { FlightFilter } from './../entities/flight-filter';
 import { Component, OnInit } from '@angular/core';
 import { Flight } from '@flight-workspace/flight-lib';
 import { select, Store } from '@ngrx/store';
@@ -12,10 +13,11 @@ import * as fromFlightBooking from '../+state';
   styleUrls: ['./flight-search.component.css']
 })
 export class FlightSearchComponent implements OnInit {
-
-  from = 'Hamburg'; // in Germany
-  to = 'Graz'; // in Austria
-  urgent = false;
+  filter: FlightFilter = {
+    from: 'Hamburg', // in Germany
+    to: 'Graz', // in Austria
+    urgent: false
+  }
   flights$ = this.store.select(fromFlightBooking.selectFlights);
 
   // "shopping basket" with selected flights
@@ -37,14 +39,16 @@ export class FlightSearchComponent implements OnInit {
     console.log('ngOnInit');
   }
 
-  search(): void {
-    if (!this.from || !this.to) return;
+  search(filter: FlightFilter): void {
+    this.filter = filter;
+
+    if (!this.filter.from || !this.filter.to) return;
 
     this.store.dispatch(
       fromFlightBooking.flightsLoad({
-        from: this.from,
-        to: this.to,
-        urgent: this.urgent
+        from: this.filter.from,
+        to: this.filter.to,
+        urgent: this.filter.urgent
       })
     );
   }
