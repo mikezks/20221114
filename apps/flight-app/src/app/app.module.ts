@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { FlightLibModule } from '@flight-workspace/flight-lib';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 import { AppComponent } from './app.component';
 import { APP_ROUTES } from './app.routes';
@@ -27,6 +28,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     FlightLibModule.forRoot(),
     SharedModule.forRoot(),
     RouterModule.forRoot(APP_ROUTES),
+    OAuthModule.forRoot()
   ],
   declarations: [
     AppComponent,
