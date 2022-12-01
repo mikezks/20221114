@@ -1,3 +1,4 @@
+import { PassengerModule } from './passenger/passenger.module';
 import { FlightCancellingModule } from './flight-booking/flight-cancelling/flight-cancelling.module';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,12 +16,19 @@ import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SharedModule } from './shared/shared.module';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { RouterState, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { reducers, metaReducers } from './+state';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   imports: [
     BrowserModule,
     HttpClientModule,
     FlightBookingModule,
+    PassengerModule,
 
     BrowserAnimationsModule,
     FlightCancellingModule,
@@ -28,6 +36,13 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     FlightLibModule.forRoot(),
     SharedModule.forRoot(),
     RouterModule.forRoot(APP_ROUTES),
+    StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot([]),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: 'router',
+      routerState: RouterState.Minimal
+    }),
+    !environment.production ? StoreDevtoolsModule.instrument({ name: 'Flight App State' }) : [],
     OAuthModule.forRoot()
   ],
   declarations: [

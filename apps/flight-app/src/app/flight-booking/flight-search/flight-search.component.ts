@@ -1,5 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {FlightService} from '@flight-workspace/flight-lib';
+import { Component, OnInit } from '@angular/core';
+import { Flight } from '@flight-workspace/flight-lib';
+import { select, Store } from '@ngrx/store';
+import { map, pipe } from 'rxjs';
+import * as fromFlightBooking from '../+state';
+
+
 
 @Component({
   selector: 'flight-search',
@@ -11,10 +16,7 @@ export class FlightSearchComponent implements OnInit {
   from = 'Hamburg'; // in Germany
   to = 'Graz'; // in Austria
   urgent = false;
-
-  get flights() {
-    return this.flightService.flights;
-  }
+  flights$ = this.store.select(fromFlightBooking.selectFlights);
 
   // "shopping basket" with selected flights
   basket: { [id: number]: boolean } = {
@@ -22,8 +24,13 @@ export class FlightSearchComponent implements OnInit {
     5: true
   };
 
-  constructor(
-    private flightService: FlightService) {
+  constructor(private store: Store) {
+    /* this.store.pipe(
+      fromFlightBooking.selectItemsByFilter(
+        fromFlightBooking.selectFlights,
+        flight => flight.delayed === false
+      )
+    ) */
   }
 
   ngOnInit() {
@@ -33,12 +40,29 @@ export class FlightSearchComponent implements OnInit {
   search(): void {
     if (!this.from || !this.to) return;
 
-    this.flightService
-      .load(this.from, this.to, this.urgent);
+    this.store.dispatch(
+      fromFlightBooking.flightsLoad({
+        from: this.from,
+        to: this.to,
+        urgent: this.urgent
+      })
+    );
   }
 
-  delay(): void {
-    this.flightService.delay();
+  delay(flight: Flight): void {
+    this.store.dispatch(
+      fromFlightBooking.flightUpdate({
+        flight: {
+          ...flight,
+          date: addMinutesToDate(flight.date, 15).toISOString(),
+          delayed: true
+        }
+      })
+    );
   }
-
 }
+
+export const addMinutesToDate = (date: Date | string, minutes: number): Date => {
+  const dateObj = date instanceof Date ? date : new Date(date);
+  return new Date(dateObj.getTime() + minutes * 60 * 1_000);
+};
