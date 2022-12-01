@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Flight } from '@flight-workspace/flight-lib';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
+import { map, pipe } from 'rxjs';
 import * as fromFlightBooking from '../+state';
+
+
 
 @Component({
   selector: 'flight-search',
@@ -21,7 +24,14 @@ export class FlightSearchComponent implements OnInit {
     5: true
   };
 
-  constructor(private store: Store) {}
+  constructor(private store: Store) {
+    /* this.store.pipe(
+      fromFlightBooking.selectItemsByFilter(
+        fromFlightBooking.selectFlights,
+        flight => flight.delayed === false
+      )
+    ) */
+  }
 
   ngOnInit() {
     console.log('ngOnInit');
