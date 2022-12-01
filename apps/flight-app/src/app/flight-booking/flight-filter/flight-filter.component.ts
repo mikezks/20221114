@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ComponentStore } from '@ngrx/component-store';
+import { map, Observable, tap } from 'rxjs';
 import { FlightFilter } from '../entities/flight-filter';
 
 
@@ -50,7 +51,10 @@ export class FlightFilterComponent {
     (state, filter: FlightFilter) => ({
       ...state,
       filters: [
-        ...state.filters,
+        ...state.filters.filter(f => !(
+          f.from === filter.from &&
+          f.to === filter.to
+        )),
         filter
       ]
     })
@@ -67,23 +71,50 @@ export class FlightFilterComponent {
     state => state.filters
   );
 
-  selectLastFilters$ = this.localStore.select(
+  selectLastFilter$ = this.localStore.select(
     // Selectors
     this.selectFilters$,
     // Projector
     filters => filters.slice(-1)[0]
   );
 
+  /**
+   * Effects
+   */
+
+  updateFilterForm = this.localStore.effect(
+    (filter$: Observable<FlightFilter>) =>
+      filter$.pipe(
+        tap(filter => this.filterForm.patchValue(filter))
+      )
+  );
+
+  updateSelectedFilter = this.localStore.effect(
+    (filter$: Observable<FlightFilter>) =>
+      filter$.pipe(
+        tap((filter: FlightFilter) => this.selectedFilter.setValue(filter))
+      )
+  );
+
+  triggerSearch = this.localStore.effect(
+    (trigger$: Observable<void>) =>
+      trigger$.pipe(
+        map(() => this.filterForm.getRawValue()),
+        tap((filter: FlightFilter) =>
+          this.addFilter(filter)
+        ),
+        tap((filter: FlightFilter) =>
+          this.searchTrigger.emit(filter)
+        )
+      )
+  );
 
   constructor(
     private fb: FormBuilder,
     private localStore: ComponentStore<LocalState>) {
 
     this.localStore.setState(initialLocalState);
-  }
-
-  search(): void {
-    this.addFilter(this.filterForm.getRawValue());
-    this.searchTrigger.next(this.filterForm.getRawValue());
+    this.updateFilterForm(this.selectedFilter.valueChanges);
+    this.updateSelectedFilter(this.selectLastFilter$);
   }
 }
